@@ -17,29 +17,23 @@ def vowel_count():
 def syllable_count():
     word = raw_input('Type in a Word.\n')
     count = 0
+    vowel_count = 0
     lenght = len(word) -1
-    vowel = 'aeiouAEIOU'
+    vowel = 'aeiouyAEIOUY'
     vowel_end = word[lenght]
     vowel_check = 'false'
     
-    """Syllables are determined as follows:
-       Each sequence of vowels a e i o u y,
-          except for the last e in a word,
-       is a vowel.
-       However, if that algorithm yields a count of 0, change it to 1.
-    """
+
     for letter in word:
-        print 1
         if letter in vowel:
             count += 1
-            print 1
-#           if lenght in vowel:
-            if vowel_check is vowel.find(vowel_end)==1
-                print 'true'
-##            print 'Count %d' %count
-##            print 'vowel_check %s' %vowel_check
-##            if vowel_check is 'True':
-##                count = -1
+            vowel_count += 1
+        elif vowel_count == 2:
+            count -= 1
+        else:
+            vowel_count = 0
+    if vowel_end == 'e':
+        count -= 1
     if count < 1:
         count = 1
     print count    
