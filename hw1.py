@@ -46,17 +46,15 @@ def syllable_count():
 def filter_dict():
     import shutil
     
-    letter_min = raw_input('Type in the MIN of letters.\n')
-    letter_max = raw_input('Type in the MAX of letters.\n')
+    letter_min = int(raw_input('Type in the MIN of letters.\n'))
+    letter_max = int(raw_input('Type in the MAX of letters.\n'))
 
-    letter_min = int(letter_min) +1
-    letter_max = int(letter_max) +1
+    letter_min +=1
+    letter_max +=1
     
-    textfile = open('namespace.txt', 'r')
+    textfile = open('ospd.txt', 'r')
     #content = textfile.read()
-    
-
-    dict_result = open ('namespace-result.txt', 'w')
+    dict_result = open ('filtered-dictionary file.txt', 'w')
     
     for line in iter(textfile):
         if len(line) <= int(letter_max):
@@ -66,18 +64,35 @@ def filter_dict():
     textfile.close()
     dict_result.close()
     
+
+
+
+
+def gematria():
+    import shutil
+    sum = 0
+    sum2 = 0
+    dic_sum = 0
+    word_sum = 0
+
+    word = raw_input('Type in a Word.\n')
     
+    for d in word:
+        sum = int(ord(d)) - ord('a') + 1
+        word_sum = sum + word_sum
+	
+    print word_sum
+
+    textfile = open('namespace.txt', 'r')
+    for e in iter(textfile):
+        for e in e:
+            sum2 = int(ord(e)) - ord('a') + 1
+            dic_sum = sum2 + dic_sum
+            print dic_sum
+
+        
     
-    """Creates a new file with only words with
-       length >= min and length <= max
-    """
 
-
-
-
-def gematria(wordToMatch, filename):
-    #replace pass below with your code
-    pass
 
 def credit_check(card_num):
     #replace pass below with your code
