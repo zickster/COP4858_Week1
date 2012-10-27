@@ -42,12 +42,38 @@ def syllable_count():
             
    
 
-def filter_dict(filename, min, max):
+#def filter_dict(filename, min, max):
+def filter_dict():
+    import shutil
+    
+    letter_min = raw_input('Type in the MIN of letters.\n')
+    letter_max = raw_input('Type in the MAX of letters.\n')
+
+    letter_min = int(letter_min) +1
+    letter_max = int(letter_max) +1
+    
+    textfile = open('namespace.txt', 'r')
+    #content = textfile.read()
+    
+
+    dict_result = open ('namespace-result.txt', 'w')
+    
+    for line in iter(textfile):
+        if len(line) <= int(letter_max):
+            if len(line) >= int(letter_min):
+                dict_result.write(line)
+
+    textfile.close()
+    dict_result.close()
+    
+    
+    
     """Creates a new file with only words with
        length >= min and length <= max
     """
-    #replace pass below with your code
-    pass
+
+
+
 
 def gematria(wordToMatch, filename):
     #replace pass below with your code
