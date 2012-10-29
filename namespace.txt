@@ -2,3 +2,7 @@ aa
 aah
 aahed
 aahing
+turnoff
+turnoffs
+turnout
+turnouts

@@ -66,6 +66,32 @@ def filter_dict():
     
 
 
+def gematria_dic():
+    import shutil
+    
+    sum = 0
+    sum2 = 0
+    dic_sum = 0
+    word_sum = 0
+
+##    word = raw_input('Type in a Word.\n')
+##    
+##    for d in word:
+##        sum = int(ord(d)) - ord('a') + 1
+##        word_sum = sum + word_sum
+##	
+##    print word_sum
+
+    textfile = open('namespace.txt', 'r')
+    for e in iter(textfile):
+        for e in e:
+            sum2 = int(ord(e)) - ord('a') + 1
+            dic_sum = sum2 + dic_sum
+            if e == "\n":
+                dic_sum =0
+##            print e
+##            print dic_sum
+
 
 
 def gematria():
@@ -83,16 +109,20 @@ def gematria():
 	
     print word_sum
 
-    textfile = open('namespace.txt', 'r')
+    textfile = open('ospd.txt', 'r')
     for e in iter(textfile):
+        found_sum= e
         for e in e:
             sum2 = int(ord(e)) - ord('a') + 1
-            dic_sum = sum2 + dic_sum
-            print dic_sum
-
-        
+            if e == "\n":
+                if dic_sum == word_sum:
+                    print found_sum
+                dic_sum =0
+            else:
+                dic_sum = sum2 + dic_sum
+            
+      
     
-
 
 def credit_check(card_num):
     #replace pass below with your code
