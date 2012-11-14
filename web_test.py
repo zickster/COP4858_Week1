@@ -13,15 +13,16 @@ import urllib2
 import string
 import sys
 from BeautifulSoup import BeautifulSoup
+
 user_agent = 'Mozilla/5 (Solaris 10) Gecko'
-headers = { 'User-Agent' : user_agent }
-values = {'s' : sys.argv[0] }
+headers = {'User-Agent': user_agent}
+values = {'s': sys.argv[0]}
 data = urllib.urlencode(values)
 request = urllib2.Request("http://www.dict.cc/", data, headers)
 response = urllib2.urlopen(request)
 the_page = response.read()
 pool = BeautifulSoup(the_page)
-results = pool.findAll('td', attrs={'class' : 'td7nl'})
+results = pool.findAll('td', attrs={'class': 'td7nl'})
 source = ''
 translations = []
 
