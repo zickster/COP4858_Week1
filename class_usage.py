@@ -1,12 +1,9 @@
-import urllib
-from urllib import urlopen
 import urllib2
-import re
 import webbrowser
 import cookielib
-import webbrowser
+from collections import defaultdict
 from BeautifulSoup import BeautifulSoup
-from string import Template
+
 
 chart_data = []
 
@@ -68,7 +65,7 @@ def getWebData():
 
 # soup's on!
 
-def soupDemo():
+def maSoup():
     """Demo of how to use BeautifulSoup"""
     # first we grab the data from results of the web form
     # and parse the HTML with BeautifulSoup
@@ -82,108 +79,114 @@ def soupDemo():
     rows = tables[2].findAll('tr')
     data = []
     course_data = []
+    new_course_data = dict()
     room_data = []
-
+    day_data = []
+    date_data = []
+    potter_day = []
+    ma_course_data = defaultdict()
 
     for tr in rows:
         if '48/003' in tr.text:
             data.append(tr)
-
     for course in data:
         cells = course.findAll('td', {'class': 'fccsc-detail-x-small-black'})
         for day in cells[11:18]:
             if len(day.text) == 7:
                 day_data = day.text[0]
-        course_data.append([cells[2].text, cells[4].text, day_data])
-
-    return course_data
-
-
-def googleChart(course_data):
-
-
-
-    pass
-
-#  for i in range(0,len(details)):
-#    if i%20 == 2:
-#        print details[i].prettify()
-
-
-
-
-##  details=tables[2].findAll('td', {'class': 'fccsc-detail-x-small-black'})
-##  results_tol = len(details)
-##  
-##  print details
-##  test = re.compile('align=LEFT"(.*)"/>')
-##  print test
-#print details[i].prettify()
-
-##http://chart.googleapis.com/chart?chxr=0,-5,105|1,0,105&chxt=x,y&chxl=0:||M|T|W|TR|F|1:||48-306|48-307|48-308|48-309|&chs=300x150&cht=s&chco=FF0000|0000FF&chds=0,100,-5,100&chd=t:12,75,23,68,34,87,41,96,71,9|98,27,56,58,18,60,34,79,74,76&chdl=MGS|Majors&chm=o,FFFFFF,0,4,0|o,FF0000,0,0:4,8|d,0000FF,0,5:9,10&chtt=.++Bldg+48+3rd+Floor+Evening+Classroom+Usage
-##handle=webbrowser.get()
-##  handle.open('http://chart.googleapis.com/chart?chxr=0,-5,105|1,0,105&chxt=x,y&chxl=0:||M|T|W|TR|F|1:||48-306|48-307|48-308|48-309|&chs=300x150&cht=s&chco=FF0000|0000FF&chds=0,100,-5,100&chd=t:12,75,23,68,34,87,41,96,71,9|98,27,56,58,18,60,34,79,74,76&chdl=MGS|Majors&chm=o,FFFFFF,0,4,0|o,FF0000,0,0:4,8|d,0000FF,0,5:9,10&chtt=.++Bldg+48+3rd+Floor+Evening+Classroom+Usage')
+                if day_data == 'M':
+                    potter_day.append(20)
+                elif day_data == 'T':
+                    potter_day.append(40)
+                elif day_data == 'W':
+                    potter_day.append(60)
+                elif day_data == 'R':
+                    potter_day.append(80)
+                elif day_data == 'F':
+                    potter_day.append(100)
+        #ma_course_data[cells[2].text].append(cells[4].text, day_data)
+        new_course_data[cells[2].text] = cells[4].text, day_data
+        course_data.append(cells[2].text)
+        room_data.append(cells[4].text)
+        date_data.append(day_data)
 
 
 
+    #generates Google Chart
+    url_start = 'http://chart.googleapis.com/chart?chxr=0,-5,105|1,0,105&chxt=x,y&chxl=0:||M|T|W|TR|1:||'
+
+    #removes duplicates
+    result = []
+    for item in room_data:
+        if item not in result:
+            result.append(item)
+
+    for g_course_potter in result[::-1]:
+        url_start = url_start + str(g_course_potter) + '|'
+    url_start = url_start[:-1]
+    url_start = url_start + '&chs=600x500&cht=s&chco=0000FF&chds=0,100,-5,100&chd=t:'
+
+    #This creates the chs plotters
+
+    y_plot = []
+    y_plotter = []
+    y_plot_dic = dict()
+    pos_rate = 100 / len(result) + 2
+    pos_plot = 100
 
 
 
+    #Dict for Room = Y-Axis value
+    for result_check in result:
+        y_plot_dic[result_check] = pos_plot
+        pos_plot = pos_plot - pos_rate
+
+    #Dict for Course dates
 
 
-##from BeautifulSoup import BeautifulSoup
-##import urllib2
-##url="http://www.utexas.edu/world/univ/alpha/"
-##page=urllib2.urlopen(url)
-##soup = BeautifulSoup(page.read())
-##universities=soup.findAll('a',{'class':'institution'})
-##for eachuniversity in universities:
-##print eachuniversity['href']+","+eachuniversity.string
-#soup=soupDemo()
+    x_plot = []
+    x_plotter = []
+    x_plot_dict = dict()
 
 
+    for grab_y in new_course_data:
+        if grab_y in new_course_data:
+            x_plot = new_course_data[grab_y][1]
+            y_plot = new_course_data[grab_y][0]
+            if y_plot in y_plot_dic:
+                y_plotter.append(y_plot_dic[y_plot])
+            if x_plot == 'M':
+                x_plotter.append(25)
+            elif x_plot == 'T':
+                x_plotter.append(50)
+            elif x_plot == 'W':
+                x_plotter.append(75)
+            elif x_plot == 'R':
+                x_plotter.append(100)
+            elif x_plot == 'F':
+                x_plotter.append(-5)
 
 
+    for x_url in x_plotter:
+        url_start = url_start + str(x_url) + ','
 
-# Sometimes you want to search by more involved means
-# For instance, suppose we wanted to find scripts that
-# have actual javascript in them as opposed to linking
-# a javascript file -- basically we are looking for
-# script tags that have a non-empty contents
+    url_start = url_start[:-1]
+    url_start = url_start + '|'
 
-# first we define a helper function that returns
-# true if and only if we are looking at a script
-# with non-empty contents
+    for y_url in y_plotter:
+        url_start = url_start + str(y_url) + ','
+    url_start = url_start[:-1]
+    url_start = url_start + '&chdl=Majors&chtt=.++Bldg+48+3rd+Floor+Evening+Classroom+Usage'
 
-
-
-
-##def google_scrape(query):
-##    address = "http://www.google.com/search?q=%s&num=100&hl=en&start=0" % (urllib.quote_plus(query))
-##    request = urllib2.Request(address, None, {'User-Agent':'Mosilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11'})
-##    urlfile = urllib2.urlopen(request)
-##    page = urlfile.read()
-##    soup = BeautifulSoup(page)
-##
-##    linkdictionary = {}
-##
-##    for li in soup.findAll('li', attrs={'class':'g'}):
-##        sLink = li.find('a')
-##        print sLink['href']
-##        sSpan = li.find('span', attrs={'class':'st'})
-##        print sSpan
-##
-##    return linkdictionary
-##
-##if __name__ == '__main__':
-##    links = google_scrape('beautifulsoup')
-
-# this is to run function soupDemo
-
-googleChart(soupDemo())
+    handle=webbrowser.get()
+    handle.open(url_start)
 
 
 
+    #return course_data, room_data, date_data
+    return url_start
 
 
 
+#this is to run function maSoup
+maSoup()
